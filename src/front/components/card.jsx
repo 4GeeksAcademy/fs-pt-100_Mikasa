@@ -18,7 +18,7 @@ export const Card = ({ task, index, onClose }) => {
 		miembros: [],
 	});
 
-	const miembrosList = ["User1", "User2", "User3", "User4"];
+	const miembrosList = ["juan", "ana", "maria", "lucia", "pedro", "thomas"];
 
 	useEffect(() => {
 	if (task) {
