@@ -98,6 +98,11 @@ export const Register = () => {
     try {
       const data = await userServices.register(formData);
       navigate("/login")
+      
+      for (const email of formData.otros) {
+        await userServices.sendInvitation(email, formData.user_name);
+      } 
+
     } catch (err) {
       console.error(err);
       alert("Error creating hogar:\n" + err.message);

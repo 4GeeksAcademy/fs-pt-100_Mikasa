@@ -2,7 +2,7 @@ import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { MovieCard } from "./MovieCard";
 
 export const OcioPendientes = () => {
-  const { store, dispatch } = useGlobalReducer()
+  const { store } = useGlobalReducer()
   const deseado = store.user?.deseado_peliculas || {};
   const ids = Object.keys(deseado).filter((id) => deseado[id] > 0);
 

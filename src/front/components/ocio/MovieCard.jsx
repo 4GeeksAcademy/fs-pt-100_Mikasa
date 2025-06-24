@@ -3,14 +3,11 @@ import userServices from "../../services/userServices";
 import omdbApi from "../../services/omdbApi";
 import "../../styles/Ocio.css";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
-import { useNavigate } from "react-router-dom";
 import { Rating } from "../modals/rating";
 import { Detalle } from "../Detalle";
 
 export const MovieCard = ({ id }) => {
-    const navigate = useNavigate();
     const { store, dispatch } = useGlobalReducer();
-    const [loading, setLoading] = useState(false);
     const [showRating, setShowRating] = useState(false);
     const [showModal, setShowModal] = useState(false);
 

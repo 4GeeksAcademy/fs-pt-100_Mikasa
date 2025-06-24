@@ -116,7 +116,6 @@
   right: 0;
 }
 
-/* Optional: hide arrows if not needed */
 @media (max-width: 768px) {
   .scroll-btn {
     display: none;

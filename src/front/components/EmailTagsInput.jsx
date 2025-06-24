@@ -20,13 +20,12 @@ export default function EmailTagsInput({ emails, onChange }) {
       setError("Este correo ya está agregado");
       return;
     }
-    onChange([...emails, candidate]); // notify parent component
+    onChange([...emails, candidate]);
     setInputValue("");
     setError("");
   };
 
   const handleKeyDown = (e) => {
-    // On Enter or comma, attempt to add the current input as an email
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       addEmail();

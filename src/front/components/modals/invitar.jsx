@@ -29,17 +29,15 @@ export const Invitar = ({ show, onClose }) => {
       return;
     }
 
+    const inviterName = store.user.user_name;
+    const hogar_id = store.hogar.id;
     try {
-      const inviterName = store.user.user_name;
-      const hogarName = store.hogar.hogar_name;
-console.log(inviterName,hogarName);
-
       for (const email of formData.otros) {
-         console.log("algo");
-        await userServices.sendInvitation(
+        await userServices.sendInvitation({
           email,
-         `${inviterName} del hogar ${hogarName}`
-        );
+          inviterName,
+          hogar_id,
+        });
       }
       onClose();
     } catch (err) {

@@ -1,16 +1,13 @@
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import placeholder from "../assets/img/avatar-placeholder.jpg";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
 	const { store } = useGlobalReducer();
-	const location = useLocation();
 
 	const avatarSrc = store?.user?.avatar_url
 		? store.user.avatar_url
 		: placeholder;
-
-	const isHome = location.pathname === "/";
 
 	return (
 		<nav className="navbar navbar-expand-md bg-charcoal px-3">

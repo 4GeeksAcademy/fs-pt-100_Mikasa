@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import userServices from "../../services/userServices";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import "../../styles/User.css";

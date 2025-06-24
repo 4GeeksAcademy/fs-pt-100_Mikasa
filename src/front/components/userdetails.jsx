@@ -1,16 +1,10 @@
-import { useState, useEffect, useRef } from "react";
-import userServices from "../services/userServices";
+import { useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "../styles/User.css";
-import { Link, useNavigate } from "react-router-dom";
-import EmailTagsInput from "../components/EmailTagsInput";
 import placeholder from "../assets/img/avatar-placeholder.jpg";
 import { EditAccount } from "./modals/editaccount";
-const CLOUD_NAME = "daavddex7";
-const UPLOAD_PRESET = "avatar_unsigned";
 
 export const UserDetails = () => {
-  const navigate = useNavigate()
   const { store } = useGlobalReducer();
 
   const avatarSrc = store.user?.avatar_url

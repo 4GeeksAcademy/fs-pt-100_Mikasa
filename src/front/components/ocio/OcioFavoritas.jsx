@@ -2,7 +2,7 @@ import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { MovieCard } from "./MovieCard";
 
 export const OcioFavoritas = () => {
-  const { store, dispatch } = useGlobalReducer()
+  const { store } = useGlobalReducer()
   const favoritos = store.user?.favorito_peliculas || [];
 
   return (

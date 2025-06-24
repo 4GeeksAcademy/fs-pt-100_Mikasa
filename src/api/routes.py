@@ -11,16 +11,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from api.mail.mailer import send_email
+import random
 
 
 api = Blueprint('api', __name__)
 
-# Allow CORS requests to this API
 CORS(api)
 
-
 @api.route("/users", methods=["GET"])
-# @jwt_required()
+@jwt_required()
 def get_all_users():
     stm = select(User)
     users = db.session.execute(stm).scalars().all()
@@ -28,7 +27,7 @@ def get_all_users():
 
 
 @api.route("/users/<int:user_id>", methods=["GET"])
-# @jwt_required()
+@jwt_required()
 def get_user(user_id):
     stm = select(User).where(User.id == user_id)
     user = db.session.execute(stm).scalar_one_or_none()
@@ -59,7 +58,7 @@ def create_user():
 
 
 @api.route("/users/<int:user_id>", methods=["PUT"])
-# @jwt_required()
+@jwt_required()
 def update_user(user_id):
     data = request.get_json()
     stm = select(User).where(User.id == user_id)
@@ -107,7 +106,7 @@ def delete_user(user_id):
 
 
 @api.route("/hogares", methods=["GET"])
-# @jwt_required()
+@jwt_required()
 def get_all_hogares():
     stm = select(Hogar)
     hogares = db.session.execute(stm).scalars().all()
@@ -153,7 +152,7 @@ def update_hogar(hogar_id):
     try:
         user_id = get_jwt_identity()
         hogar.hogar_name = data.get("hogar_name", hogar.hogar_name)
-        hogar.user_id = user_id  # Actualizamos con el user_id del token
+        hogar.user_id = user_id
         db.session.commit()
         return jsonify(hogar.serialize()), 200
     except Exception as e:
@@ -773,18 +772,18 @@ def login():
         stm = select(User).where(User.email == data['email'])
         user = db.session.execute(stm).scalars().first()
 
-        stm2 = select(Hogar).where(Hogar.id == user.hogar_id)
-        hogar = db.session.execute(stm2).scalars().first()
-
         if not user:
             return jsonify({"error": "Email not found"}), 404
 
         if not check_password_hash(user.password, data['password']):
             return jsonify({"success": False, "msg": "email/password wrong"})
 
+        stm2 = select(Hogar).where(Hogar.id == user.hogar_id)
+        hogar = db.session.execute(stm2).scalars().first()
+
         token = create_access_token(identity=str(user.id))
 
-        return jsonify({"msg": "login ok", "token": token, "user": user.serialize(), "hogar": hogar.serialize()}), 200
+        return jsonify({"msg": "login ok", "token": token, "user": user.serialize(), "hogar": hogar.serialize() if hogar else None}), 200
 
     except Exception as e:
         print("Login error:", e)
@@ -813,11 +812,12 @@ def get_user_inf():
 def check_mail():
     try:
         data = request.json
-        user = User.query.filter_by(email=data['email']).first()
+        stm = select(User).where(User.email == data['email'])
+        user = db.session.execute(stm).scalars().first()
         if not user:
             return jsonify({'success': False, 'msg': 'email not found'}), 404
 
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=str(user.id))
         result = send_email(data['email'], token, tipo="reset")
 
         return jsonify({'success': True, 'token': token, 'email': data['email']}), 200
@@ -830,13 +830,33 @@ def send_invitation():
     try:
         data = request.get_json()
         email = data.get("email")
-        username = data.get("username")
-        print(data, email, username)
-        if not email or not username:
-            return jsonify({"success": False, "msg": "Faltan el correo o el nombre de usuario"}), 400
+        inviter_name = data.get("inviterName")
+        hogar_id = data.get("hogar_id")
+        if not email or not hogar_id or not inviter_name:
+            return jsonify({"success": False, "msg": "Faltan datos obligatorios"}), 400
+        
+        stm = select(User).where(User.email == data['email'])
+        user = db.session.execute(stm).scalars().first()
 
-        token = create_access_token(identity=email)
-        result = send_email(email, token, tipo="invite", username=username)
+        if not user:
+            base_username = email.split("@")[0]
+            existing = User.query.filter_by(user_name=base_username).first()
+            if existing:
+                base_username = f"{base_username}{random.randint(1000, 9999)}"
+
+
+            user = User(
+                email=email,
+                user_name=base_username,
+                password=generate_password_hash("1234"),
+                admin=False,
+                hogar_id=hogar_id
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        token = create_access_token(identity=str(user.id))
+        result = send_email(email, token, tipo="invite", username=inviter_name)
 
         if result["success"]:
             return jsonify({"success": True, "msg": "Invitación enviada con éxito"}), 200
@@ -851,22 +871,114 @@ def send_invitation():
 def handle_mail(address):
     return send_email(address)
 
-
 @api.route('/password_update', methods=['PUT'])
 @jwt_required()
 def password_update():
     try:
         data = request.json
+        #extraemos el id del token que creamos en la linea 98
         id = get_jwt_identity()
-
+        #buscamos usuario por id
         user = User.query.get(id)
-        if not user:
-            return jsonify({'success': False, 'msg': 'Usuario no encontrado'}), 404
-
+        #actualizamos password del usuario
         user.password = generate_password_hash(data['password'])
+        #alacenamos los cambios
         db.session.commit()
-
-        return jsonify({'success': True, 'msg': 'Contraseña actualizada exitosamente'}), 200
+        return jsonify({'success': True, 'msg': 'Contraseña actualizada exitosamente, intente iniciar sesion'}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'success': False, 'msg': f"Error al actualizar contraseña: {str(e)}"}), 500
+
+
+
+@api.route("/seed", methods=["POST"])
+def seed_info():
+        # Crear hogares
+        hogares = [
+            Hogar(hogar_name="La Casa de Papel ...Higiénico"),
+            Hogar(hogar_name="Maria & Lucía"),
+        ]
+        db.session.add_all(hogares)
+        db.session.commit()
+
+        # Crear 5 usuarios
+        users = [
+            User(user_name="juan", hogar_id=1, email="juan@mail.com", password=generate_password_hash("juan123"), avatar_url="https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="ana", hogar_id=1, email="ana@mail.com", password=generate_password_hash("ana123"), avatar_url="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg", admin=False, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="pedro", hogar_id=1, email="pedro@mail.com", password=generate_password_hash("pedro123"), avatar_url="https://images.pexels.com/photos/31517042/pexels-photo-31517042.jpeg", admin=False, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="maria", hogar_id=2, email="maria@mail.com", password=generate_password_hash("maria123"), avatar_url="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="lucia", hogar_id=2, email="lucia@mail.com", password=generate_password_hash("lucia123"), avatar_url="https://images.pexels.com/photos/6706847/pexels-photo-6706847.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
+        ]
+        db.session.add_all(users)
+        db.session.commit()
+
+
+        # Finanzas para cada hogar
+        finanzas = [
+            Finanzas(monto=1000, user_id=users[0].id, hogar_id=hogares[0].id),
+            Finanzas(monto=800, user_id=users[1].id, hogar_id=hogares[1].id),
+            Finanzas(monto=600, user_id=users[2].id, hogar_id=hogares[2].id),
+            Finanzas(monto=400, user_id=users[3].id, hogar_id=hogares[3].id),
+            Finanzas(monto=200, user_id=users[4].id, hogar_id=hogares[4].id),
+        ]
+        db.session.add_all(finanzas)
+        db.session.commit()
+
+        # Pagos para cada hogar
+        pagos = [
+            Pagos(user_id=users[0].id, hogar_id=hogares[0].id, finanzas_id=finanzas[0].id, monto=200),
+            Pagos(user_id=users[1].id, hogar_id=hogares[1].id, finanzas_id=finanzas[1].id, monto=150),
+            Pagos(user_id=users[2].id, hogar_id=hogares[2].id, finanzas_id=finanzas[2].id, monto=100),
+            Pagos(user_id=users[3].id, hogar_id=hogares[3].id, finanzas_id=finanzas[3].id, monto=50),
+            Pagos(user_id=users[4].id, hogar_id=hogares[4].id, finanzas_id=finanzas[4].id, monto=25),
+        ]
+        db.session.add_all(pagos)
+        db.session.commit()
+
+        # User_pagos (cada usuario paga en su hogar)
+        user_pagos = [
+            User_pagos(user_id=users[0].id, hogar_id=hogares[0].id, pago_id=pagos[0].id, estado=True),
+            User_pagos(user_id=users[1].id, hogar_id=hogares[1].id, pago_id=pagos[1].id, estado=False),
+            User_pagos(user_id=users[2].id, hogar_id=hogares[2].id, pago_id=pagos[2].id, estado=True),
+            User_pagos(user_id=users[3].id, hogar_id=hogares[3].id, pago_id=pagos[3].id, estado=False),
+            User_pagos(user_id=users[4].id, hogar_id=hogares[4].id, pago_id=pagos[4].id, estado=True),
+        ]
+        db.session.add_all(user_pagos)
+        db.session.commit()
+
+        # Tareas (algunas cruzadas entre usuarios)
+        tareas = [
+            Tareas(user_id=users[0].id, done_by=users[1].id, hogar_id=hogares[0].id, tarea="Lavar platos", done=True),
+            Tareas(user_id=users[1].id, done_by=users[2].id, hogar_id=hogares[1].id, tarea="Sacar basura", done=False),
+            Tareas(user_id=users[2].id, done_by=users[3].id, hogar_id=hogares[2].id, tarea="Barrer", done=True),
+            Tareas(user_id=users[3].id, done_by=users[4].id, hogar_id=hogares[3].id, tarea="Cocinar", done=False),
+            Tareas(user_id=users[4].id, done_by=users[0].id, hogar_id=hogares[4].id, tarea="Regar plantas", done=True),
+        ]
+        db.session.add_all(tareas)
+        db.session.commit()
+
+        # Comidas
+        comidas = [
+            Comida(user_id=users[0].id, hogar_id=hogares[0].id, recetas={"nombre": "Paella"}),
+            Comida(user_id=users[1].id, hogar_id=hogares[1].id, recetas={"nombre": "Tortilla"}),
+            Comida(user_id=users[2].id, hogar_id=hogares[2].id, recetas={"nombre": "Ensalada"}),
+            Comida(user_id=users[3].id, hogar_id=hogares[3].id, recetas={"nombre": "Pizza"}),
+            Comida(user_id=users[4].id, hogar_id=hogares[4].id, recetas={"nombre": "Empanadas"}),
+        ]
+        db.session.add_all(comidas)
+        db.session.commit()
+
+        # Favoritos_hogar
+        favoritos = [
+            Favoritos_hogar(user_id=users[0].id, hogar_id=hogares[0].id),
+            Favoritos_hogar(user_id=users[1].id, hogar_id=hogares[1].id),
+            Favoritos_hogar(user_id=users[2].id, hogar_id=hogares[2].id),
+            Favoritos_hogar(user_id=users[3].id, hogar_id=hogares[3].id),
+            Favoritos_hogar(user_id=users[4].id, hogar_id=hogares[4].id),
+        ]
+        db.session.add_all(favoritos)
+        db.session.commit()
+
+        print("Datos de prueba insertados correctamente.")
+
+        return jsonify({"success":True})
+

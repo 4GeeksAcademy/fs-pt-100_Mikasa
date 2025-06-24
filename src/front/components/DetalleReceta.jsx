@@ -30,7 +30,7 @@ export const DetalleReceta = ({ id }) => {
   }
 
   return (
-          <>
+    <>
       <div className="row">
         <div className="col">
           <div className="d-flex justify-content-center h-100">
@@ -66,6 +66,6 @@ export const DetalleReceta = ({ id }) => {
           __html: DOMPurify.sanitize(receta.instructions || "")
         }}
       />
-      </>
+    </>
   );
 };

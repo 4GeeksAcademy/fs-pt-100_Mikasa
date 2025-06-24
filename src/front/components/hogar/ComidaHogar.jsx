@@ -35,8 +35,8 @@ export const ComidaHogar = () => {
                     </div>
                 </div>
             ) : (
-        <p className="text-center mt-4">Nadie ha marcado recetas todavía.</p>
-      )}
+                <p className="text-center mt-4">Nadie ha marcado recetas todavía.</p>
+            )}
         </>
     )
 }

@@ -5,7 +5,7 @@ import os
 def send_email(address, token, tipo="reset", username=None):
     try:
         if os.getenv("FLASK_DEBUG") == "1":
-            frontend_url = "https://glowing-space-succotash-9g76r4xvgggh9xww-3000.app.github.dev/reset"
+            frontend_url = "https://special-chainsaw-7v5vpq6r9q4ghwwrx-3000.app.github.dev/reset"
         else:
             frontend_url = f"{os.getenv('BACKEND_URL')}/reset"
 
@@ -14,7 +14,7 @@ def send_email(address, token, tipo="reset", username=None):
         if tipo == "invite":
             subject = "Quieres unirte a Mikasa"
             html = f"""
-                <p>Hola {username}, te han invitado a unirte a nuestra plataforma.</p>
+                <p>Hola {username}, te ha invitado a unirte a nuestra plataforma.</p>
                 <p><a href="{link}">Haz clic aquí para establecer tu contraseña y comenzar</a></p>
             """
         else:

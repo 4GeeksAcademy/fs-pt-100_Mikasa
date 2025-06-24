@@ -144,3 +144,60 @@ a:active {
   object-fit: cover;
   border: 1px solid #ccc;
 }
+
+.recovery-link {
+  margin-top: 1rem;
+  color: #6FB8A8; 
+   text-align: right;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.recovery-link:hover {
+  color: #A8C97F; 
+  text-decoration: none;
+}
+
+.modal-recuperar {
+  padding: 20px 30px;
+  background-color: #395675;
+  border: 2px solid ivory;
+  border-radius: 12px;
+}
+
+.modal-title {
+  color: #FFF8E7;
+}
+
+.btn-close-white {
+  filter: invert(1);
+}
+
+.user-button {
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c2c2c;
+  background-color: #6FB8A8;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.user-button:hover {
+  background-color: #A8C97F;
+  color: #2c2c2c;
+}
+
+.user-button:active {
+  background-color: #E2B659;
+  color: #2c2c2c;
+}
+
+.alert {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}

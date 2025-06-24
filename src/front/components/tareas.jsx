@@ -14,9 +14,11 @@ export const Tareas = () => {
 
 	const [filtro, setFiltro] = useState("todas");
 
+
 	const openModal = () => {
 		setEditIndex(null);
 		setShowCardModal(true);
+
 	};
 
 	const handleDelete = (index) => {
@@ -74,6 +76,7 @@ export const Tareas = () => {
 										<div
 											className={`card p-3 h-100 text-start bg-ivory 
 											${t.hecha ? "hecha" : "pendiente"}`}
+
 										>
 											<h5 className={t.hecha ? "text-decoration-line-through" : ""}>{t.nombre}</h5>
 											<div className="d-flex flex-wrap gap-2 mb-2">

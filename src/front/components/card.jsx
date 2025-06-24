@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "../styles/Tareas.css";
 
+
 export const Card = ({ task, index, onClose }) => {
 	const [nombre, setNombre] = useState(task?.nombre || "");
 	const { dispatch } = useGlobalReducer();
@@ -21,6 +22,7 @@ export const Card = ({ task, index, onClose }) => {
 	const miembrosList = ["juan", "ana", "maria", "lucia", "pedro", "thomas"];
 
 	useEffect(() => {
+
 	if (task) {
 		setFormData(task);
 	}
@@ -54,6 +56,7 @@ export const Card = ({ task, index, onClose }) => {
 			hecha: formData.hecha || false,
 		};
 
+
 		if (task && typeof index === "number") {
 			dispatch({
 				type: "edit_task",
@@ -62,6 +65,7 @@ export const Card = ({ task, index, onClose }) => {
 		} else {
 			dispatch({ type: "add_task", payload: tarea });
 		}
+
 
 		onClose();
 	};
@@ -198,7 +202,9 @@ export const Card = ({ task, index, onClose }) => {
 
 				<div className="text-end">
 					<button type="submit" className="btn btn-primary me-2">Guardar</button>
+
 					<button type="reset" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+
 				</div>
 			</form>
 		</div>

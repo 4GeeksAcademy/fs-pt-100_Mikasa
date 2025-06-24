@@ -13,22 +13,19 @@ def seed():
 
         # Crear hogares, cada uno con un usuario diferente
         hogares = [
-            Hogar(hogar_name="Casa Juan"),
-            Hogar(hogar_name="Casa Ana"),
-            Hogar(hogar_name="Casa Pedro"),
-            Hogar(hogar_name="Casa Maria"),
-            Hogar(hogar_name="Casa Lucia"),
+            Hogar(hogar_name="La Casa de Papel ...Higiénico"),
+            Hogar(hogar_name="Maria & Lucía"),
         ]
         db.session.add_all(hogares)
         db.session.commit()
 
         # Crear 5 usuarios
         users = [
-            User(user_name="juan", hogar_id=1, email="juan@mail.com", password=generate_password_hash("juan123"), avatar_url="https://gravatar.com/avatar/d86302dc4b4e7e2b62efd0de7a620bd1?s=400&d=robohash&r=x", admin=True, favorito_recetas={}, favorito_peliculas={}),
-            User(user_name="ana", hogar_id=1, email="ana@mail.com", password=generate_password_hash("ana123"), avatar_url="https://gravatar.com/avatar/6d394837f600c829a5b93aa30361a530?s=400&d=robohash&r=x", admin=False, favorito_recetas={}, favorito_peliculas={}),
-            User(user_name="pedro", hogar_id=1, email="pedro@mail.com", password=generate_password_hash("pedro123"), avatar_url="https://gravatar.com/avatar/b4e67727e1b554afbca61d25aa444a5c?s=400&d=robohash&r=x", admin=False, favorito_recetas={}, favorito_peliculas={}),
-            User(user_name="maria", hogar_id=2, email="maria@mail.com", password=generate_password_hash("maria123"), avatar_url="https://gravatar.com/avatar/8618d8bf91f8feb81247a7d6427023b7?s=400&d=robohash&r=x", admin=False, favorito_recetas={}, favorito_peliculas={}),
-            User(user_name="lucia", hogar_id=2, email="lucia@mail.com", password=generate_password_hash("lucia123"), avatar_url="https://gravatar.com/avatar/3aec47fc0f21334908726f5e9dd7cf11?s=400&d=robohash&r=x", admin=False, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="juan", hogar_id=1, email="juan@mail.com", password=generate_password_hash("juan123"), avatar_url="https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="ana", hogar_id=1, email="ana@mail.com", password=generate_password_hash("ana123"), avatar_url="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg", admin=False, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="pedro", hogar_id=1, email="pedro@mail.com", password=generate_password_hash("pedro123"), avatar_url="https://images.pexels.com/photos/31517042/pexels-photo-31517042.jpeg", admin=False, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="maria", hogar_id=2, email="maria@mail.com", password=generate_password_hash("maria123"), avatar_url="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
+            User(user_name="lucia", hogar_id=2, email="lucia@mail.com", password=generate_password_hash("lucia123"), avatar_url="https://images.pexels.com/photos/6706847/pexels-photo-6706847.jpeg", admin=True, favorito_recetas={}, favorito_peliculas={}),
         ]
         db.session.add_all(users)
         db.session.commit()
