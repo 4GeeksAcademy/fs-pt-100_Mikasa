@@ -1,81 +1,68 @@
-# WebApp boilerplate with React JS and Flask API
+# 🏠 MiKasa – Gestor inteligente del hogar
 
-Build web applications using React.js for the front end and python/flask for your backend API.
+**MiKasa** es una aplicación web diseñada para ayudar a las personas a organizar y gestionar su hogar de forma práctica, moderna y centralizada. La app cubre cuatro áreas fundamentales del día a día familiar: tareas, finanzas, ocio y recetas.
 
-- Documentation can be found here: https://4geeks.com/docs/start/react-flask-template
-- Here is a video on [how to use this template](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
-- Integrated with Pipenv for package managing.
-- Fast deployment to Render [in just a few steps here](https://4geeks.com/docs/start/deploy-to-render-com).
-- Use of .env file.
-- SQLAlchemy integration for database abstraction.
+---
 
-### 1) Installation:
+## 🌟 Características principales
 
-> If you use Github Codespaces (recommended) or Gitpod this template will already come with Python, Node and the Posgres Database installed. If you are working locally make sure to install Python 3.10, Node 
+### ✅ Gestión de tareas del hogar
+- Crear, editar y asignar tareas (limpieza, compras, mantenimiento…)
+- Recordatorios y tareas recurrentes
+- Seguimiento del progreso
 
-It is recomended to install the backend first, make sure you have Python 3.10, Pipenv and a database engine (Posgress recomended)
+### 💰 Control de finanzas familiares
+- Registro de gastos e ingresos
+- Presupuestos mensuales
+- Visualización con gráficos
 
-1. Install the python packages: `$ pipenv install`
-2. Create a .env file based on the .env.example: `$ cp .env.example .env`
-3. Install your database engine and create your database, depending on your database you have to create a DATABASE_URL variable with one of the possible values, make sure you replace the valudes with your database information:
+### 🎉 Organización del ocio
+- Planificación de películas o series para ver en familia
+- Sugerencias de peliculas o series para compartir
+- 
 
-| Engine    | DATABASE_URL                                        |
-| --------- | --------------------------------------------------- |
-| SQLite    | sqlite:////test.db                                  |
-| MySQL     | mysql://username:password@localhost:port/example    |
-| Postgress | postgres://username:password@localhost:5432/example |
+### 🍽️ Recetas y alimentación
+- Base de datos de recetas
+- Planificación de menús semanales
 
-4. Migrate the migrations: `$ pipenv run migrate` (skip if you have not made changes to the models on the `./src/api/models.py`)
-5. Run the migrations: `$ pipenv run upgrade`
-6. Run the application: `$ pipenv run start`
 
-> Note: Codespaces users can connect to psql by typing: `psql -h localhost -U gitpod example`
+---
 
-### Undo a migration
+## 👩‍💻 Tecnologías utilizadas
 
-You are also able to undo a migration by running
+- HTML, CSS, JavaScript, Python
+- [Framework que uses: React,]
+- [Gestor de base de datos si aplica: MySQL,]
+- [Estilos:  CSS, Bootstrap]
 
-```sh
-$ pipenv run downgrade
-```
+---
 
-### Backend Populate Table Users
+## 🎯 Público objetivo
 
-To insert test users in the database execute the following command:
+- Familias o parejas que quieran coordinar tareas y tiempo libre
+- Personas que buscan controlar sus gastos y organizar su alimentación
+- Compañeros de piso que quieren simplificar su rutina doméstica con una sola app
 
-```sh
-$ flask insert-test-users 5
-```
+---
 
-And you will see the following message:
+## 🚀 Estado del proyecto
 
-```
-  Creating test users
-  test_user1@test.com created.
-  test_user2@test.com created.
-  test_user3@test.com created.
-  test_user4@test.com created.
-  test_user5@test.com created.
-  Users created successfully!
-```
+-  ✅ Proyecto finalizado  
 
-### **Important note for the database and the data inside it**
 
-Every Github codespace environment will have **its own database**, so if you're working with more people eveyone will have a different database and different records inside it. This data **will be lost**, so don't spend too much time manually creating records for testing, instead, you can automate adding records to your database by editing ```commands.py``` file inside ```/src/api``` folder. Edit line 32 function ```insert_test_data``` to insert the data according to your model (use the function ```insert_test_users``` above as an example). Then, all you need to do is run ```pipenv run insert-test-data```.
+---
 
-### Front-End Manual Installation:
+## 📷 Capturas de pantalla
 
--   Make sure you are using node version 20 and that you have already successfully installed and runned the backend.
+![captura](https://github.com/user-attachments/assets/da53cfaa-2558-4859-825a-beef261b1ea1)
 
-1. Install the packages: `$ npm install`
-2. Start coding! start the webpack dev server `$ npm run start`
+![captura 2](https://github.com/user-attachments/assets/5a4c45b3-eab5-4c9b-9b02-4cab03dc4af4)
 
-## Publish your website!
 
-This boilerplate it's 100% read to deploy with Render.com and Heroku in a matter of minutes. Please read the [official documentation about it](https://4geeks.com/docs/start/deploy-to-render-com).
+---
 
-### Contributors
 
-This template was built as part of the 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about our [Full Stack Developer Course](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), and [Data Science Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning).
 
-You can find other templates and resources like this at the [school github page](https://github.com/4geeksacademy/).
+
+
+
